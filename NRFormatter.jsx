@@ -203,7 +203,7 @@ function NRFormatter() {
         <div>${addLine("Site Address", siteAddress)}</div>
         <div>${addLine("Legal Description", legalDescription)}</div>  
         <div>${addLine("Additional Details", additionalDetails)}</div>
-        <div><br></div>
+        
         <div><strong>CONNECTION DETAILS - NEW CONNECTION</strong></div>
         <div>${addLine("Phases Required", phasesRequired)}</div>
         <div>${addLine("Load Demand", loadDemand)}</div>
@@ -223,7 +223,12 @@ function NRFormatter() {
         <div>${addLine("Name", displayName)}</div>
         <div>${addLine("Phone", displayPhone)}</div>
         <div>${addLine("Email", displayEmail)}</div>
-        <div>${addLine("Nominated Inspector/Meter Installer", displayInspector)}</div>
+
+        <div><strong>Applicat Details</strong></div>
+        <div>${addLine("Company", applicantCompany)}</div>
+        <div>${addLine("Name", applicantName)}</div>
+        <div>${addLine("Phone", applicantPhone)}</div>
+        <div>${addLine("Email", applicantEmail)}</div>
         `
 
         setOutputHtml(output);
