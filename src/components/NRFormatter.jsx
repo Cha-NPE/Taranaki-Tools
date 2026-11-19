@@ -179,11 +179,12 @@ function NRFormatter() {
         }[phasesRequired.toLowerCase()] || phasesRequired)} ${loadDemand}A</strong></div>
         <div>Permanent/Temporary: ${permanent}</div>
         <div>Asset Type: ${
-            assetType === "Pillar"
-                ? "Pillar Box" + assetNumber
-                : assetType + assetNumber
+            assetType === "Pillar "
+                ? "Pillar Box " + assetNumber
+                : assetType + " " + assetNumber
         }</div>
         <div>Transformer Site ID ${transformerSite}</div>
+        <div><br></div>
         <div><strong>\nService Cable Size:\n</strong></div>
 
         ${assetTypeMissing ? `<div><strong>Asset missing</strong></div>` : ``}
