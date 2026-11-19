@@ -21,8 +21,9 @@ Error generating stack: `+e.message+`
         ${he?``:`
         <div>${{one:`Single phase`,two:`Two phase`,three:`Three phase`}[S.toLowerCase()]||S} ${te}A</strong></div>
         <div>Permanent/Temporary: ${v}</div>
-        <div>Asset Type: ${C===`Pillar`?`Pillar Box`+ne:C+ne}</div>
+        <div>Asset Type: ${C===`Pillar `?`Pillar Box `+ne:C+` `+ne}</div>
         <div>Transformer Site ID ${w}</div>
+        <div><br></div>
         <div><strong>\nService Cable Size:\n</strong></div>
 
         ${xe?`<div><strong>Asset missing</strong></div>`:``}
