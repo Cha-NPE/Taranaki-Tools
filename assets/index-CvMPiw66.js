@@ -43,8 +43,6 @@ Error generating stack: `+e.message+`
         <div>${c(`Site Address`,y)}</div>
         <div>${c(`Legal Description`,ee)}</div>  
         <div>${c(`Additional Details`,x)}</div>
-        
-        <div><br></div>
         <div><strong>CONNECTION DETAILS - NEW CONNECTION</strong></div>
         <div>${c(`Phases Required`,S)}</div>
         <div>${c(`Load Demand`,te)}</div>
@@ -61,7 +59,7 @@ Error generating stack: `+e.message+`
         <div>${c(`Phone`,T)}</div>
         <div>${c(`Email`,E)}</div>
         <div><br></div>
-        <strong>Applicant Details</strong>
+        <div>${c(`APPLICANT DETAILS`)}</div>
         <div>${c(`Company`,de)}</div>
         <div>${c(`Name`,fe)}</div>
         <div>${c(`Phone`,pe)}</div>
