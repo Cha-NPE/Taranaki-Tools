@@ -1,4 +1,4 @@
-import NRFormatter from "./NRFormatter";
+import NRFormatter from "./components/NRFormatter";
 
 import "./App.css";
 
