@@ -184,7 +184,7 @@ function NRFormatter() {
                 : assetType + " " + assetNumber
         }</div>
         <div>Transformer Site ID ${transformerSite}</div>
-        <div><br></div>
+        <div><br></d
         <div><strong>\nService Cable Size:\n</strong></div>
 
         ${assetTypeMissing ? `<div><strong>Asset missing</strong></div>` : ``}
@@ -204,6 +204,7 @@ function NRFormatter() {
         <div>${addLine("Site Address", siteAddress)}</div>
         <div>${addLine("Legal Description", legalDescription)}</div>  
         <div>${addLine("Additional Details", additionalDetails)}</div>
+        <div><br></div>
         <div><strong>CONNECTION DETAILS - NEW CONNECTION</strong></div>
         <div>${addLine("Phases Required", phasesRequired)}</div>
         <div>${addLine("Load Demand", loadDemand)}</div>
@@ -223,8 +224,8 @@ function NRFormatter() {
         <div>${addLine("Name", displayName)}</div>
         <div>${addLine("Phone", displayPhone)}</div>
         <div>${addLine("Email", displayEmail)}</div>
-        <div><br></div>
-        <div>${addLine("APPLICANT DETAILS")}</div>
+
+        <strong>Applicant Details</strong>
         <div>${addLine("Company", applicantCompany)}</div>
         <div>${addLine("Name", applicantName)}</div>
         <div>${addLine("Phone", applicantPhone)}</div>
