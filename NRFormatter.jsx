@@ -32,30 +32,6 @@ function NRFormatter() {
         return `${label}: ${value}`;
     }
 
-    function getRegionNumber(siteAddress) {
-        const normalizedAddress = (siteAddress || "").toLowerCase();
-        const whanganuiTerms = [
-            "whanganui",
-            "wanganui",
-            "marton",
-            "taihape",
-            "bulls",
-            "ohakune",
-            "brunswick",
-            "hunterville",
-            "castlecliff",
-            "durie hill",
-            "gonville",
-            "springvale"
-        ];
-
-        if (whanganuiTerms.some(term => normalizedAddress.includes(term))) {
-            return "4100000590";
-        }
-
-        return "4100000589";
-    }
-
     function formatPhone(phone) {
         if (!phone) { return ""; }
 
@@ -185,7 +161,7 @@ function NRFormatter() {
         const output =
         `
         <div>${workOrderNumber} ${subject}-${titleAddress}</div>
-        <div>${getRegionNumber(siteAddress)}</div>
+        <div>4100000590</div>
 
         <div style="text-align:center;">
             <span style="font-weight:bold; text-decoration: underline; font-size:10pt;">
@@ -193,30 +169,27 @@ function NRFormatter() {
             </span>
         </div>
         <div><br></div>
-        <div><strong>${jobClassification} ${icpNumber}</strong></div>
+        <div>${jobClassification} ${icpNumber}</div>
         
         ${!isDecommission ? `
-        <div><strong>${({  
+        <div>${({  
             one: "Single phase",
             two: "Two phase",
             three: "Three phase"
         }[phasesRequired.toLowerCase()] || phasesRequired)} ${loadDemand}A</strong></div>
-        <div><strong>Connect [size]mm ${({
-            one: "1",
-            two: "2",
-            three: "3"
-        }[phasesRequired.toLowerCase()] || phasesRequired)}C NS service cable to ${
+        <div>Permanent/Temporary: ${permanent}</div>
+        <div>Asset Type: ${
             assetType === "Pillar"
-                ? "Pillar Box# " + assetNumber
-                : assetType + "# " + assetNumber
-        }</strong></div>
-        <div><strong>COC, ROI?, & lock off photo attached</strong></div>
-        <div><strong>Permanent/Temporary: ${permanent}</strong></div>
-        <div><strong>J A Russell PO# 462XXX</strong></div>
+                ? "Pillar Box" + assetNumber
+                : assetType + assetNumber
+        }</div>
+        <div>Transformer Site ID ${transformerSite}</div>
+        <div><strong>\nService Cable Size:\n</strong></div>
+
         ${assetTypeMissing ? `<div><strong>Asset missing</strong></div>` : ``}
         ${assetNumberMissing ? `<div><strong>Asset number missing</strong></div>` : ``}
         ` : ``}
-        ${isDecommission ? `<strong>
+        ${isDecommission ? `
         <div>${assetType} ${assetNumber}</div>
         <div>Transformer Site ID ${transformerSite}</div>
         <div>Site address: ${siteAddress}</div>
@@ -251,39 +224,7 @@ function NRFormatter() {
         <div>${addLine("Phone", displayPhone)}</div>
         <div>${addLine("Email", displayEmail)}</div>
         <div>${addLine("Nominated Inspector/Meter Installer", displayInspector)}</div>
-        
-        ${isDecommission ? `
-            <div style="text-align:center;">
-                <span style="font-weight:bold; font-size:10pt;">
-                    Carry out decommission to PowerCo standard. Fill in isolation/disconnection tag attached and leave in meter box at site so that third parties can clearly see the status of the connection
-                </span>
-            </div>
-            <div style="text-align:center;">
-                <span style="font-weight:bold; font-size:10pt;">
-                    This decommission was carried out by a third party. PowerCo have requested that we go to site and check it was carried out to PowerCo standard and to provide a completed As Built
-                </span>
-            </div>
-        ` : `
-            <div style="text-align:center;">
-                <span style="font-weight:bold; font-size:10pt;">
-                    Connect & Liven (Do not liven if unsafe)
-                </span>
-            </div>
-            <div style="text-align:center;">
-                <span style="font-weight:bold; font-size:10pt;">
-                    Connect Only
-                </span>
-            </div>
-            <div style="text-align:center;">
-                <span style="font-weight:bold; font-size:10pt;">
-                    Contact electrician ${electricianPhone} or Chisora/Isla if any issues
-                </span>
-            </div>
-        `}
-        <br>
-        <strong>ORIGINAL SAP TEXT</strong><br>
-        <div>${originalHTML}</div>
-        `;
+        `
 
         setOutputHtml(output);
     }
