@@ -95,6 +95,12 @@ function NRFormatter() {
         return text.substring(contentStart, endIndex).trim();
     }
 
+    // Finds a label anywhere in the text and returns the value after it (same line or next line).
+    function getLineValue(text, label) {
+        const match = text.match(new RegExp(label + "\\s*:?\\s*([^\\r\\n]*)", "i"));
+        return match ? match[1].trim() : "";
+    }
+
     function convertSAPText() {
         const text = sapInputRef.current.innerText;
         const originalHTML = sapInputRef.current.innerHTML;
@@ -143,6 +149,8 @@ function NRFormatter() {
         const applicantPhone = formatPhone(getValue(applicantSection, "Phone:", "Email:"));
         const applicantEmail = getValue(applicantSection, "Email:", "Nominated Inspector/Meter Installer:");
         const applicantInspector = getValue(applicantSection, "Nominated Inspector/Meter Installer:", "END");
+
+        const projectManagerName = getLineValue(text, "Project Manager Name");
 
         const isDecommission = jobClassification.toLowerCase().includes("decommission");
         const isTemporary = permanent.toLowerCase().includes("temp");
@@ -248,7 +256,8 @@ function NRFormatter() {
                 contactLines(applicantCompany, applicantName, applicantPhone, applicantEmail))
         ];
 
-        const output = sections.join(SECTION_GAP);
+        const projectManagerSection = renderSection(null, [addLine("Project Manager Name", projectManagerName)]);
+        const output = [...sections, projectManagerSection].filter(Boolean).join(SECTION_GAP);
 
         setOutputHtml(output);
     }
