@@ -244,7 +244,7 @@ function NRFormatter() {
             ]),
             renderSection(displaySectionTitle,
                 contactLines(displayCompany, displayName, displayPhone, displayEmail)),
-            renderSection("Applicant Details",
+            renderSection("APPLICANT DETAILS",
                 contactLines(applicantCompany, applicantName, applicantPhone, applicantEmail))
         ];
 
