@@ -1,6 +1,23 @@
 import { useRef, useState } from "react";
 import "./styles.css";
 
+// ---- Output spacing ----
+// Number of blank lines between each section of the output.
+// Change this one value to adjust the spacing everywhere.
+const BLANK_LINES_BETWEEN_SECTIONS = 1;
+const SECTION_GAP = "<div><br></div>".repeat(BLANK_LINES_BETWEEN_SECTIONS);
+
+// Builds one section: an optional bold title followed by its lines.
+// Empty lines are dropped so missing fields don't leave gaps.
+function renderSection(title, lines = []) {
+    const body = lines
+        .filter(line => line && line.trim())
+        .map(line => `<div>${line}</div>`)
+        .join("");
+    const heading = title ? `<div><strong>${title}</strong></div>` : "";
+    return heading + body;
+}
+
 function NRFormatter() {
     const sapInputRef = useRef(null);
     const [emailText, setEmailText] = useState("");
@@ -158,79 +175,80 @@ function NRFormatter() {
         const formattedDate = String(dueDate.getDate()).padStart(2, "0") + "/" + String(dueDate.getMonth() + 1).padStart(2, "0") + "/" + dueDate.getFullYear();
 
         //Formatted output
-        const output =
-        `
-        <div>${workOrderNumber} ${subject}-${titleAddress}</div>
-        <div>4100000590</div>
-
-        <div style="text-align:center;">
-            <span style="font-weight:bold; text-decoration: underline; font-size:10pt;">
-                ${workOrderNumber} - ${titleAddress || legalDescription} - ${displayJobClassification}
-            </span>
-        </div>
-        <div><br></div>
-        <div>${jobClassification} ${icpNumber}</div>
-        
-        ${!isDecommission ? `
-        <div>${({  
+        const phaseText = {
             one: "Single phase",
             two: "Two phase",
             three: "Three phase"
-        }[phasesRequired.toLowerCase()] || phasesRequired)} ${loadDemand}A</strong></div>
-        <div>Permanent/Temporary: ${permanent}</div>
-        <div>Asset Type: ${
-            assetType === "Pillar "
-                ? "Pillar Box " + assetNumber
-                : assetType + " " + assetNumber
-        }</div>
-        <div>Transformer Site ID ${transformerSite}</div>
-        <div><br></d
-        <div><strong>\nService Cable Size:\n</strong></div>
+        }[phasesRequired.toLowerCase()] || phasesRequired;
 
-        ${assetTypeMissing ? `<div><strong>Asset missing</strong></div>` : ``}
-        ${assetNumberMissing ? `<div><strong>Asset number missing</strong></div>` : ``}
-        ` : ``}
-        ${isDecommission ? `
-        <div>${assetType} ${assetNumber}</div>
-        <div>Transformer Site ID ${transformerSite}</div>
-        <div>Site address: ${siteAddress}</div>
-        <div>${addLine("Additional Details", additionalDetails)}</div>
-        <div>High level job scope: ${jobScope}</div>
-        <br>
-        <div>ELECTRICIAN DETAILS</strong></div>
-        ` : `
-        <div><br></div>
-        <div><strong>SITE DETAILS</strong></div>
-        <div>${addLine("Site Address", siteAddress)}</div>
-        <div>${addLine("Legal Description", legalDescription)}</div>  
-        <div>${addLine("Additional Details", additionalDetails)}</div>
-        <div><br></div>
-        <div><strong>CONNECTION DETAILS - NEW CONNECTION</strong></div>
-        <div>${addLine("Phases Required", phasesRequired)}</div>
-        <div>${addLine("Load Demand", loadDemand)}</div>
-        <div>${assetType === "Transformer" ? "" : addLine(
-            assetType === "Pillar"
-                ? "Pillar Box#"
-                : assetType + "#",
-            assetNumber)}</div>
-        <div>${addLine("Transformer Site ID", transformerSite)}</div>
-        <div>${addLine("High Level Job Scope", jobScope)}</div>
-        <div>${addLine("Land Description", landDescription)}</div>
-        <div>${addLine("Comments", comments)}</div>
-        <div><br></div>
-        <div><strong>${displaySectionTitle}</strong></div>
-        `}
-        <div>${addLine("Company", displayCompany)}</div>
-        <div>${addLine("Name", displayName)}</div>
-        <div>${addLine("Phone", displayPhone)}</div>
-        <div>${addLine("Email", displayEmail)}</div>
+        const headerBlock = [
+            `<div>${workOrderNumber} ${subject}-${titleAddress}</div>`,
+            `<div>4100000590</div>`,
+            `<div style="text-align:center;">
+                <span style="font-weight:bold; text-decoration: underline; font-size:10pt;">
+                    ${workOrderNumber} - ${titleAddress || legalDescription} - ${displayJobClassification}
+                </span>
+            </div>`
+        ].join("");
 
-        <strong>Applicant Details</strong>
-        <div>${addLine("Company", applicantCompany)}</div>
-        <div>${addLine("Name", applicantName)}</div>
-        <div>${addLine("Phone", applicantPhone)}</div>
-        <div>${addLine("Email", applicantEmail)}</div>
-        `
+        const contactLines = (company, name, phone, email) => [
+            addLine("Company", company),
+            addLine("Name", name),
+            addLine("Phone", phone),
+            addLine("Email", email)
+        ];
+
+        // Each entry is one section; SECTION_GAP is inserted between them.
+        const sections = isDecommission ? [
+            headerBlock,
+            renderSection(null, [
+                `${jobClassification} ${icpNumber}`,
+                `${assetType} ${assetNumber}`,
+                `Transformer Site ID ${transformerSite}`,
+                `Site address: ${siteAddress}`,
+                addLine("Additional Details", additionalDetails),
+                `High level job scope: ${jobScope}`
+            ]),
+            renderSection("ELECTRICIAN DETAILS",
+                contactLines(displayCompany, displayName, displayPhone, displayEmail)),
+            renderSection("Applicant Details",
+                contactLines(applicantCompany, applicantName, applicantPhone, applicantEmail))
+        ] : [
+            headerBlock,
+            renderSection(null, [
+                `${jobClassification} ${icpNumber}`,
+                `${phaseText} ${loadDemand}A`,
+                `Permanent/Temporary: ${permanent}`,
+                `Asset Type: ${assetType === "Pillar" ? "Pillar Box" : assetType} ${assetNumber}`,
+                `Transformer Site ID ${transformerSite}`
+            ]),
+            renderSection("Service Cable Size:", [
+                assetTypeMissing ? "<strong>Asset missing</strong>" : "",
+                assetNumberMissing ? "<strong>Asset number missing</strong>" : ""
+            ]),
+            renderSection("SITE DETAILS", [
+                addLine("Site Address", siteAddress),
+                addLine("Legal Description", legalDescription),
+                addLine("Additional Details", additionalDetails)
+            ]),
+            renderSection("CONNECTION DETAILS - NEW CONNECTION", [
+                addLine("Phases Required", phasesRequired),
+                addLine("Load Demand", loadDemand),
+                assetType === "Transformer" ? "" : addLine(
+                    assetType === "Pillar" ? "Pillar Box#" : assetType + "#",
+                    assetNumber),
+                addLine("Transformer Site ID", transformerSite),
+                addLine("High Level Job Scope", jobScope),
+                addLine("Land Description", landDescription),
+                addLine("Comments", comments)
+            ]),
+            renderSection(displaySectionTitle,
+                contactLines(displayCompany, displayName, displayPhone, displayEmail)),
+            renderSection("Applicant Details",
+                contactLines(applicantCompany, applicantName, applicantPhone, applicantEmail))
+        ];
+
+        const output = sections.join(SECTION_GAP);
 
         setOutputHtml(output);
     }
